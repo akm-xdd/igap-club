@@ -49,6 +49,7 @@ model User {
   githubUsername String?  @map("github_username")
   accounts      Account[]
   sessions      Session[]
+  posts         Post[]    // Add this line
 
   @@map("users")
 }
@@ -61,3 +62,22 @@ model VerificationToken {
   @@unique([identifier, token])
   @@map("verificationtokens")
 }
+
+model Post {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  content     String   @db.Text // Large text field for markdown
+  tags        String[] // Array of tags
+  author      String
+  authorId    String   // Link to user who created it
+  wordCount   Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Link to user (optional, for future features)
+  user User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("posts")
+}
+

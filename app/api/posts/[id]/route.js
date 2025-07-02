@@ -1,38 +1,18 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
-import fs from 'fs/promises'
-import path from 'path'
+import { PrismaClient } from '@prisma/client'
 
-const POSTS_FILE = path.join(process.cwd(), 'data', 'posts.json')
-const POSTS_DIR = path.join(process.cwd(), 'data', 'posts')
+const prisma = new PrismaClient()
 
-// Simple word counting function - just ignore backticks
-function countWords(content) {
-  // Remove backticks but keep all the content
-  const cleanContent = content.replace(/`/g, '')
-  const words = cleanContent.trim().split(/\s+/).filter(word => word.length > 0)
-  return words.length
-}
-
-// Read posts metadata
-async function readPostsMetadata() {
-  try {
-    const data = await fs.readFile(POSTS_FILE, 'utf-8')
-    return JSON.parse(data)
-  } catch (error) {
-    return []
-  }
-}
-
-// GET - Fetch single post with full content (public, no auth required)
+// GET - Fetch single post with full content (public)
 export async function GET(request, { params }) {
   try {
     const { id } = params
     
-    // Find post metadata
-    const posts = await readPostsMetadata()
-    const post = posts.find(p => p.id === id)
+    const post = await prisma.post.findUnique({
+      where: { id }
+    })
     
     if (!post) {
       return NextResponse.json(
@@ -41,120 +21,11 @@ export async function GET(request, { params }) {
       )
     }
 
-    // Read the markdown content
-    const contentPath = path.join(POSTS_DIR, post.filename)
-    let content = ''
-    
-    try {
-      content = await fs.readFile(contentPath, 'utf-8')
-    } catch (error) {
-      console.error('Error reading post content:', error)
-      return NextResponse.json(
-        { error: 'Post content not found' },
-        { status: 404 }
-      )
-    }
-
-    // Return post with content
-    const fullPost = {
-      ...post,
-      content
-    }
-
-    return NextResponse.json(fullPost)
+    return NextResponse.json(post)
   } catch (error) {
     console.error('Error fetching post:', error)
     return NextResponse.json(
       { error: 'Failed to fetch post' },
-      { status: 500 }
-    )
-  }
-}
-
-// PUT - Update post (requires authentication and ownership)
-export async function PUT(request, { params }) {
-  try {
-    // Check authentication
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      )
-    }
-
-    const { id } = params
-    const body = await request.json()
-    
-    // Find and check ownership
-    const posts = await readPostsMetadata()
-    const postIndex = posts.findIndex(p => p.id === id)
-    
-    if (postIndex === -1) {
-      return NextResponse.json(
-        { error: 'Post not found' },
-        { status: 404 }
-      )
-    }
-
-    const existingPost = posts[postIndex]
-    
-    // Check if user owns this post
-    if (existingPost.authorId !== session.user.id) {
-      return NextResponse.json(
-        { error: 'You can only edit your own posts' },
-        { status: 403 }
-      )
-    }
-
-    const { title, description, content, tags } = body
-
-    // Validation
-    if (title !== undefined && !title.trim()) {
-      return NextResponse.json(
-        { error: 'Title cannot be empty' },
-        { status: 400 }
-      )
-    }
-
-    if (content !== undefined) {
-      const wordCount = countWords(content.trim())
-      if (wordCount > 300) {
-        return NextResponse.json(
-          { error: 'Content must be 300 words or less' },
-          { status: 400 }
-        )
-      }
-    }
-
-    // Update metadata
-    const updatedPost = {
-      ...existingPost,
-      ...(title !== undefined && { title: title.trim() }),
-      ...(description !== undefined && { description: description.trim() }),
-      ...(tags !== undefined && { tags: tags.map(tag => tag.toLowerCase().trim()) }),
-      updatedAt: new Date().toISOString(),
-      ...(content !== undefined && { 
-        wordCount: countWords(content.trim())
-      })
-    }
-
-    posts[postIndex] = updatedPost
-
-    // Update content file if provided
-    if (content !== undefined) {
-      const contentPath = path.join(POSTS_DIR, existingPost.filename)
-      await fs.writeFile(contentPath, content.trim())
-    }
-
-    // Save metadata
-    await fs.writeFile(POSTS_FILE, JSON.stringify(posts, null, 2))
-
-    return NextResponse.json(updatedPost)
-  } catch (error) {
-    console.error('Error updating post:', error)
-    return NextResponse.json(
-      { error: 'Failed to update post' },
       { status: 500 }
     )
   }
@@ -175,17 +46,16 @@ export async function DELETE(request, { params }) {
     const { id } = params
     
     // Find post and check ownership
-    const posts = await readPostsMetadata()
-    const postIndex = posts.findIndex(p => p.id === id)
+    const post = await prisma.post.findUnique({
+      where: { id }
+    })
     
-    if (postIndex === -1) {
+    if (!post) {
       return NextResponse.json(
         { error: 'Post not found' },
         { status: 404 }
       )
     }
-
-    const post = posts[postIndex]
     
     // Check if user owns this post
     if (post.authorId !== session.user.id) {
@@ -195,17 +65,10 @@ export async function DELETE(request, { params }) {
       )
     }
 
-    // Delete content file
-    try {
-      const contentPath = path.join(POSTS_DIR, post.filename)
-      await fs.unlink(contentPath)
-    } catch (error) {
-      console.warn('Could not delete content file:', error)
-    }
-
-    // Remove from metadata
-    posts.splice(postIndex, 1)
-    await fs.writeFile(POSTS_FILE, JSON.stringify(posts, null, 2))
+    // Delete the post
+    await prisma.post.delete({
+      where: { id }
+    })
 
     return NextResponse.json({ message: 'Post deleted successfully' })
   } catch (error) {

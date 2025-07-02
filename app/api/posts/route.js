@@ -1,61 +1,36 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
-import fs from 'fs/promises'
-import path from 'path'
-import { v4 as uuidv4 } from 'uuid'
+import { PrismaClient } from '@prisma/client'
 
-const POSTS_FILE = path.join(process.cwd(), 'data', 'posts.json')
-const POSTS_DIR = path.join(process.cwd(), 'data', 'posts')
+const prisma = new PrismaClient()
 
-// Simple word counting function - just ignore backticks
+// Simple word counting function
 function countWords(content) {
-  // Remove backticks but keep all the content
   const cleanContent = content.replace(/`/g, '')
   const words = cleanContent.trim().split(/\s+/).filter(word => word.length > 0)
   return words.length
 }
 
-// Ensure data directory exists
-async function ensureDataDir() {
-  try {
-    await fs.access(path.join(process.cwd(), 'data'))
-  } catch {
-    await fs.mkdir(path.join(process.cwd(), 'data'), { recursive: true })
-  }
-  
-  try {
-    await fs.access(POSTS_DIR)
-  } catch {
-    await fs.mkdir(POSTS_DIR, { recursive: true })
-  }
-}
-
-// Read posts metadata
-async function readPostsMetadata() {
-  try {
-    await ensureDataDir()
-    const data = await fs.readFile(POSTS_FILE, 'utf-8')
-    return JSON.parse(data)
-  } catch (error) {
-    // If file doesn't exist, return empty array
-    return []
-  }
-}
-
-// Write posts metadata
-async function writePostsMetadata(posts) {
-  await ensureDataDir()
-  await fs.writeFile(POSTS_FILE, JSON.stringify(posts, null, 2))
-}
-
 // GET - Fetch all posts (public, no auth required)
 export async function GET() {
   try {
-    const posts = await readPostsMetadata()
-    // Sort by creation date, newest first
-    const sortedPosts = posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    return NextResponse.json(sortedPosts)
+    const posts = await prisma.post.findMany({
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        tags: true,
+        author: true,
+        authorId: true,
+        wordCount: true,
+        createdAt: true,
+        updatedAt: true,
+        // Don't include content in list view for performance
+      }
+    })
+    return NextResponse.json(posts)
   } catch (error) {
     console.error('Error fetching posts:', error)
     return NextResponse.json(
@@ -104,37 +79,20 @@ export async function POST(request) {
       )
     }
 
-    // Ensure directories exist before creating post
-    await ensureDataDir()
+    // Create post in database
+    const post = await prisma.post.create({
+      data: {
+        title: title.trim(),
+        description: description.trim(),
+        content: content.trim(),
+        tags: tags.map(tag => tag.toLowerCase().trim()),
+        author: session.user.githubUsername || session.user.name || 'user',
+        authorId: session.user.id,
+        wordCount: calculatedWordCount,
+      }
+    })
 
-    // Create post object
-    const postId = uuidv4()
-    const filename = `${postId}.md`
-    const now = new Date().toISOString()
-    
-    const postMetadata = {
-      id: postId,
-      title: title.trim(),
-      description: description.trim(),
-      tags: tags.map(tag => tag.toLowerCase().trim()),
-      author: session.user.githubUsername || session.user.name || 'akm-xdd',
-      authorId: session.user.id, // Store user ID for ownership
-      createdAt: now,
-      updatedAt: now,
-      filename,
-      wordCount: calculatedWordCount
-    }
-
-    // Save markdown content to file
-    const postPath = path.join(POSTS_DIR, filename)
-    await fs.writeFile(postPath, content.trim())
-
-    // Update posts metadata
-    const posts = await readPostsMetadata()
-    posts.push(postMetadata)
-    await writePostsMetadata(posts)
-
-    return NextResponse.json(postMetadata, { status: 201 })
+    return NextResponse.json(post, { status: 201 })
   } catch (error) {
     console.error('Error creating post:', error)
     return NextResponse.json(

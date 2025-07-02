@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server'
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/lib/auth"
 import fs from 'fs/promises'
 import path from 'path'
 
@@ -23,7 +25,7 @@ async function readPostsMetadata() {
   }
 }
 
-// GET - Fetch single post with full content
+// GET - Fetch single post with full content (public, no auth required)
 export async function GET(request, { params }) {
   try {
     const { id } = params
@@ -69,13 +71,22 @@ export async function GET(request, { params }) {
   }
 }
 
-// PUT - Update post (for future use)
+// PUT - Update post (requires authentication and ownership)
 export async function PUT(request, { params }) {
   try {
+    // Check authentication
+    const session = await getServerSession(authOptions)
+    if (!session) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      )
+    }
+
     const { id } = params
     const body = await request.json()
     
-    // Find and update post
+    // Find and check ownership
     const posts = await readPostsMetadata()
     const postIndex = posts.findIndex(p => p.id === id)
     
@@ -87,6 +98,15 @@ export async function PUT(request, { params }) {
     }
 
     const existingPost = posts[postIndex]
+    
+    // Check if user owns this post
+    if (existingPost.authorId !== session.user.id) {
+      return NextResponse.json(
+        { error: 'You can only edit your own posts' },
+        { status: 403 }
+      )
+    }
+
     const { title, description, content, tags } = body
 
     // Validation
@@ -140,12 +160,21 @@ export async function PUT(request, { params }) {
   }
 }
 
-// DELETE - Delete post (for future use)
+// DELETE - Delete post (requires authentication and ownership)
 export async function DELETE(request, { params }) {
   try {
+    // Check authentication
+    const session = await getServerSession(authOptions)
+    if (!session) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      )
+    }
+
     const { id } = params
     
-    // Find post
+    // Find post and check ownership
     const posts = await readPostsMetadata()
     const postIndex = posts.findIndex(p => p.id === id)
     
@@ -157,6 +186,14 @@ export async function DELETE(request, { params }) {
     }
 
     const post = posts[postIndex]
+    
+    // Check if user owns this post
+    if (post.authorId !== session.user.id) {
+      return NextResponse.json(
+        { error: 'You can only delete your own posts' },
+        { status: 403 }
+      )
+    }
 
     // Delete content file
     try {

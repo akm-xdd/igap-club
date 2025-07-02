@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server'
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/lib/auth"
 import fs from 'fs/promises'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
@@ -47,7 +49,7 @@ async function writePostsMetadata(posts) {
   await fs.writeFile(POSTS_FILE, JSON.stringify(posts, null, 2))
 }
 
-// GET - Fetch all posts
+// GET - Fetch all posts (public, no auth required)
 export async function GET() {
   try {
     const posts = await readPostsMetadata()
@@ -63,11 +65,20 @@ export async function GET() {
   }
 }
 
-// POST - Create new post
+// POST - Create new post (requires authentication)
 export async function POST(request) {
   try {
+    // Check authentication
+    const session = await getServerSession(authOptions)
+    if (!session) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      )
+    }
+
     const body = await request.json()
-    const { title, description, content, tags, author, wordCount } = body
+    const { title, description, content, tags } = body
 
     // Validation
     if (!title?.trim() || !description?.trim() || !content?.trim()) {
@@ -106,7 +117,8 @@ export async function POST(request) {
       title: title.trim(),
       description: description.trim(),
       tags: tags.map(tag => tag.toLowerCase().trim()),
-      author: author || 'akm-xdd',
+      author: session.user.githubUsername || session.user.name || 'akm-xdd',
+      authorId: session.user.id, // Store user ID for ownership
       createdAt: now,
       updatedAt: now,
       filename,

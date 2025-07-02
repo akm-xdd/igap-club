@@ -1,13 +1,16 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Plus, X, Eye, FileText, Tag, User, Calendar } from "lucide-react"
+import { useSession } from "next-auth/react"
+import { Plus, X, Eye, FileText, Tag, User, Calendar, LogOut } from "lucide-react"
+import { signOut } from "next-auth/react"
 import PostCard from './PostCard'
 import PostModal from './PostModal'
 import AddPostModal from './AddPostModal'
 import Link from "next/link"
 
 export default function ContentPage() {
+  const { data: session, status } = useSession()
   const [posts, setPosts] = useState([])
   const [selectedPost, setSelectedPost] = useState(null)
   const [showAddModal, setShowAddModal] = useState(false)
@@ -37,7 +40,10 @@ export default function ContentPage() {
       const response = await fetch(`/api/posts/${post.id}`)
       if (response.ok) {
         const fullPost = await response.json()
+        console.log('Full post data:', fullPost) // Debug log
         setSelectedPost(fullPost)
+      } else {
+        console.error('Failed to fetch post details')
       }
     } catch (error) {
       console.error('Error fetching post details:', error)
@@ -57,9 +63,13 @@ export default function ContentPage() {
       if (response.ok) {
         await fetchPosts() // Refresh posts list
         setShowAddModal(false)
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Failed to create post')
       }
     } catch (error) {
       console.error('Error adding post:', error)
+      alert('Failed to create post')
     }
   }
 
@@ -68,7 +78,11 @@ export default function ContentPage() {
     setPosts(prevPosts => prevPosts.filter(post => post.id !== postId))
   }
 
-  if (loading) {
+  const handleSignOut = () => {
+    signOut({ callbackUrl: '/content' })
+  }
+
+  if (loading || status === 'loading') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex items-center justify-center">
         <div className="text-center">
@@ -78,6 +92,13 @@ export default function ContentPage() {
       </div>
     )
   }
+
+  const canAddContent = session && status === 'authenticated'
+  const userCanDelete = (post) => session && post.authorId === session.user.id
+
+  console.log('Session:', session) // Debug log
+  console.log('Status:', status) // Debug log
+  console.log('Can add content:', canAddContent) // Debug log
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
@@ -99,13 +120,35 @@ export default function ContentPage() {
               </div>
             </div>
             
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="flex items-center space-x-2 bg-green-600/20 hover:bg-green-600/30 border border-green-500/50 hover:border-green-400 rounded-lg px-4 py-2 transition-all duration-300 transform hover:scale-105"
-            >
-              <Plus size={18} />
-              <span className="font-mono text-sm font-semibold">Add Content</span>
-            </button>
+            <div className="flex items-center space-x-4">
+              {/* Add Content Button - Only shown when authenticated */}
+              {canAddContent && (
+                <button
+                  onClick={() => setShowAddModal(true)}
+                  className="flex items-center space-x-2 bg-green-600/20 hover:bg-green-600/30 border border-green-500/50 hover:border-green-400 rounded-lg px-4 py-2 transition-all duration-300 transform hover:scale-105"
+                >
+                  <Plus size={18} />
+                  <span className="font-mono text-sm font-semibold">Add Content</span>
+                </button>
+              )}
+
+              {/* User Info & Sign Out - Only shown when authenticated */}
+              {session && (
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2 text-sm font-mono text-gray-300">
+                    <User size={16} />
+                    <span>{session.user.githubUsername || session.user.name}</span>
+                  </div>
+                  <button
+                    onClick={handleSignOut}
+                    className="p-2 hover:bg-gray-700/50 rounded-lg transition-colors group"
+                    title="Sign out"
+                  >
+                    <LogOut size={18} className="text-gray-400 group-hover:text-red-400" />
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </nav>
@@ -131,14 +174,9 @@ export default function ContentPage() {
           <div className="text-center py-16">
             <FileText className="text-gray-600 mx-auto mb-4" size={64} />
             <h3 className="text-xl font-mono text-gray-400 mb-2">No content yet</h3>
-            <p className="text-gray-500 font-mono mb-6">Be the first to share your programming tricks!</p>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="inline-flex items-center space-x-2 bg-green-600/20 hover:bg-green-600/30 border border-green-500/50 hover:border-green-400 rounded-lg px-6 py-3 transition-all duration-300"
-            >
-              <Plus size={20} />
-              <span className="font-mono font-semibold">Create First Post</span>
-            </button>
+            <p className="text-gray-500 font-mono mb-6">
+              Check back soon for programming tricks and solutions!
+            </p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -147,6 +185,7 @@ export default function ContentPage() {
                 key={post.id}
                 post={post}
                 onClick={() => handlePostClick(post)}
+                canDelete={userCanDelete(post)}
               />
             ))}
           </div>
@@ -159,16 +198,27 @@ export default function ContentPage() {
           post={selectedPost}
           onClose={() => setSelectedPost(null)}
           onDelete={handleDeletePost}
+          canDelete={userCanDelete(selectedPost)}
         />
       )}
 
-      {/* Add Post Modal */}
-      {showAddModal && (
+      {/* Add Post Modal - Show if authenticated and modal is open */}
+      {showAddModal && canAddContent && (
         <AddPostModal
           onClose={() => setShowAddModal(false)}
           onSubmit={handleAddPost}
         />
       )}
+
+      {/* Debug Info - Remove in production */}
+      {/* {process.env.NODE_ENV === 'development' && (
+        <div className="fixed bottom-4 left-4 bg-gray-800 border border-gray-600 rounded-lg p-4 text-xs font-mono text-gray-300 z-50">
+          <div>Status: {status}</div>
+          <div>Session: {session ? 'Yes' : 'No'}</div>
+          <div>Can Add: {canAddContent ? 'Yes' : 'No'}</div>
+          <div>Show Modal: {showAddModal ? 'Yes' : 'No'}</div>
+        </div>
+      )} */}
     </div>
   )
 }

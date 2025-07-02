@@ -1,29 +1,16 @@
 [
   {
-    "id": "c44499b3-7d77-4123-a8e5-ccf6b394d3b7",
-    "title": "Test",
-    "description": "Test",
+    "id": "df181832-804e-424f-afd9-9efbe3464e9b",
+    "title": "My first post",
+    "description": "Anand's first post",
     "tags": [
-      "test",
       "python"
     ],
     "author": "akm-xdd",
-    "createdAt": "2025-07-02T07:04:18.522Z",
-    "updatedAt": "2025-07-02T07:04:18.522Z",
-    "filename": "c44499b3-7d77-4123-a8e5-ccf6b394d3b7.md",
-    "wordCount": 4
-  },
-  {
-    "id": "f44bedf5-bc4f-47c9-847a-4f9b46550f3d",
-    "title": "adasd",
-    "description": "asdasd",
-    "tags": [
-      "sadasdad"
-    ],
-    "author": "akm-xdd",
-    "createdAt": "2025-07-02T07:35:12.947Z",
-    "updatedAt": "2025-07-02T07:35:12.947Z",
-    "filename": "f44bedf5-bc4f-47c9-847a-4f9b46550f3d.md",
-    "wordCount": 30
+    "authorId": "cmclphl4k0000uo6kkqxzh1sb",
+    "createdAt": "2025-07-02T08:52:12.972Z",
+    "updatedAt": "2025-07-02T08:52:12.972Z",
+    "filename": "df181832-804e-424f-afd9-9efbe3464e9b.md",
+    "wordCount": 20
   }
 ]

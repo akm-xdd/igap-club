@@ -15,7 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "DevBench Club",
+  title: "DevBench.club",
   description: "Developer tools, blog, and courses",
 };
 

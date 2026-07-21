@@ -11,7 +11,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-semibold mb-3">No Data Collection</h2>
             <p className="text-foreground/80">
-              DevBench Club does not collect, store, or track any personal information. We do not
+              DevBench.club does not collect, store, or track any personal information. We do not
               use cookies, analytics, or any tracking technologies.
             </p>
           </section>

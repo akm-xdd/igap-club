@@ -8,7 +8,7 @@ export default function HomePage() {
       {/* Hero */}
       <section className="py-24 text-center max-w-3xl mx-auto">
         <div className="mb-4">
-          <h1 className="text-6xl font-bold mb-2">DevBench Club</h1>
+          <h1 className="text-6xl font-bold mb-2">DevBench.club</h1>
           <p className="text-lg text-muted-foreground">
             Small tools. No friction.
           </p>

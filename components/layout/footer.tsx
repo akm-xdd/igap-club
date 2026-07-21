@@ -8,7 +8,7 @@ export function Footer() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            © {currentYear} DevBench Club. Built for devs, by devs.
+            © {currentYear} DevBench.club. Built for devs, by devs.
           </p>
           
           <div className="flex gap-6">

@@ -3,7 +3,7 @@ export default function AboutPage() {
     <div className="container mx-auto px-4 py-16">
       <div className="max-w-3xl mx-auto space-y-8">
         <div>
-          <h1 className="text-5xl font-bold mb-4">About DevBench Club</h1>
+          <h1 className="text-5xl font-bold mb-4">About DevBench.club</h1>
           <p className="text-xl text-muted-foreground">
             Small tools. No friction.
           </p>
@@ -11,7 +11,7 @@ export default function AboutPage() {
 
         <div className="space-y-6">
           <p className="text-lg">
-            DevBench Club is a collection of developer tools, technical articles, and hands-on
+            DevBench.club is a collection of developer tools, technical articles, and hands-on
             programming guides. Everything here is free, open, and runs directly in your browser.
           </p>
 

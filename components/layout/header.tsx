@@ -18,7 +18,7 @@ export function Header() {
     <header className="border-b-2 border-border">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="font-bold text-xl hover:opacity-70 transition-opacity">
-          IGAP.club
+          DevBench.club
         </Link>
         
         <ul className="flex gap-8">

@@ -15,7 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "IGAP Club",
+  title: "DevBench Club",
   description: "Developer tools, blog, and courses",
 };
 

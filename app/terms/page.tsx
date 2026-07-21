@@ -11,7 +11,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-semibold mb-3">Acceptance of Terms</h2>
             <p className="text-foreground/80">
-              By accessing and using IGAP Club, you accept and agree to be bound by these terms. 
+              By accessing and using DevBench Club, you accept and agree to be bound by these terms.
               If you do not agree, please do not use this site.
             </p>
           </section>
@@ -36,7 +36,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-semibold mb-3">Limitation of Liability</h2>
             <p className="text-foreground/80">
-              IGAP Club and its contributors are not liable for any damages arising from the use 
+              DevBench Club and its contributors are not liable for any damages arising from the use
               or inability to use this site or its tools. Use everything at your own risk.
             </p>
           </section>

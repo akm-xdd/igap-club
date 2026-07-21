@@ -3,15 +3,15 @@ export default function AboutPage() {
     <div className="container mx-auto px-4 py-16">
       <div className="max-w-3xl mx-auto space-y-8">
         <div>
-          <h1 className="text-5xl font-bold mb-4">About IGAP Club</h1>
+          <h1 className="text-5xl font-bold mb-4">About DevBench Club</h1>
           <p className="text-xl text-muted-foreground">
-            I'm Good At Programming
+            Small tools. No friction.
           </p>
         </div>
 
         <div className="space-y-6">
           <p className="text-lg">
-            IGAP Club is a collection of developer tools, technical articles, and hands-on 
+            DevBench Club is a collection of developer tools, technical articles, and hands-on
             programming guides. Everything here is free, open, and runs directly in your browser.
           </p>
 
@@ -43,7 +43,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <h2 className="text-2xl font-semibold mt-8 mb-4">Why IGAP?</h2>
+          <h2 className="text-2xl font-semibold mt-8 mb-4">Why DevBench?</h2>
           <p className="text-foreground/80">
             Because developers deserve straightforward, practical resources without paywalls, 
             tracking, or unnecessary complexity. Just tools that work and knowledge that helps.

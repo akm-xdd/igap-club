@@ -1,6 +1,13 @@
 import Link from 'next/link';
 import { getBlogPosts } from '@/lib/mdx';
 
+function formatDate(date?: string): string | null {
+  if (!date) return null;
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(parsed);
+}
+
 export default function BlogPage() {
   const posts = getBlogPosts();
 
@@ -13,18 +20,26 @@ export default function BlogPage() {
         </p>
 
         <div className="space-y-6">
-          {posts.map((post) => (
-            <Link key={post.slug} href={`/blog/${post.slug}`} className="block group">
-              <article className="border-b pb-6">
-                <h2 className="text-2xl font-semibold mb-2 group-hover:text-foreground/70 transition-colors">
-                  {post.title}
-                </h2>
-                {post.description && (
-                  <p className="text-muted-foreground">{post.description}</p>
-                )}
-              </article>
-            </Link>
-          ))}
+          {posts.map((post) => {
+            const formattedDate = formatDate(post.date);
+            return (
+              <Link key={post.slug} href={`/blog/${post.slug}`} className="block group">
+                <article className="border-b pb-6">
+                  <h2 className="text-2xl font-semibold mb-2 group-hover:text-foreground/70 transition-colors">
+                    {post.title}
+                  </h2>
+                  {post.description && (
+                    <p className="text-muted-foreground mb-2">{post.description}</p>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    {formattedDate && <span>{formattedDate}</span>}
+                    {formattedDate && <span> · </span>}
+                    <span>{post.readingTime}</span>
+                  </p>
+                </article>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

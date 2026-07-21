@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 const errorMessages = [
@@ -32,8 +33,12 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const randomMessage = errorMessages[Math.floor(Math.random() * errorMessages.length)];
-  const randomExcuse = errorExcuses[Math.floor(Math.random() * errorExcuses.length)];
+  const [randomMessage] = useState(
+    () => errorMessages[Math.floor(Math.random() * errorMessages.length)]
+  );
+  const [randomExcuse] = useState(
+    () => errorExcuses[Math.floor(Math.random() * errorExcuses.length)]
+  );
 
   useEffect(() => {
     console.error(error);
@@ -54,19 +59,15 @@ export default function Error({
           <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-2">
             Likely reason
           </p>
-          <p className="text-foreground italic">"{randomExcuse}"</p>
+          <p className="text-foreground italic">&ldquo;{randomExcuse}&rdquo;</p>
         </div>
 
         <div className="flex gap-4 justify-center">
           <Button size="lg" onClick={reset}>
             Try Again
           </Button>
-          <Button 
-            variant="outline" 
-            size="lg" 
-            onClick={() => window.location.href = '/'}
-          >
-            Go Home
+          <Button variant="outline" size="lg" asChild>
+            <Link href="/">Go Home</Link>
           </Button>
         </div>
       </div>

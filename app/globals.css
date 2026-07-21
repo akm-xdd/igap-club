@@ -1,6 +1,39 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+:root {
+  /* sugar-high syntax highlight colors, tuned for the dark code-block background below */
+  --sh-keyword: #ff7b72;
+  --sh-string: #a5d6ff;
+  --sh-identifier: #e6edf3;
+  --sh-sign: #8b949e;
+  --sh-comment: #8b949e;
+  --sh-property: #79c0ff;
+  --sh-entity: #d2a8ff;
+  --sh-class: #ffa657;
+  --sh-jsxliterals: #79c0ff;
+}
+
+/* Comic-style code blocks and inline code inside blog/article prose content */
+.prose pre {
+  border: 2px solid #000;
+  border-radius: var(--radius-lg);
+  box-shadow: 4px 4px 0 #000;
+}
+
+.prose :not(pre) > code {
+  border: 2px solid #000;
+  border-radius: 6px;
+  padding: 0.15em 0.4em;
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none;
+}
+
 /* Comic/sketchy button style - target shadcn button classes */
 .inline-flex.items-center.justify-center {
   box-shadow: 4px 4px 0 currentColor;

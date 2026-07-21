@@ -20,4 +20,19 @@ export const toolsRegistry: Tool[] = [
     name: 'JWT Parser',
     description: 'Decode and inspect JWT tokens',
   },
+  {
+    slug: 'epoch-converter',
+    name: 'Epoch & Timezone Converter',
+    description: 'Convert epoch timestamps and compare times across timezones',
+  },
+  {
+    slug: 'json-formatter',
+    name: 'JSON Formatter',
+    description: 'Format, validate, and explore JSON with a live tree view',
+  },
+  {
+    slug: 'lorem-ipsum',
+    name: 'Lorem Ipsum Generator',
+    description: 'Generate placeholder text by words, sentences, or paragraphs',
+  },
 ];

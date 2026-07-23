@@ -127,7 +127,7 @@ export function DateTimePicker({ value, onChange, placeholder = 'Pick a date & t
         <button
           type="button"
           className={cn(
-            'flex h-8 items-center gap-2 rounded-lg border-2 border-black bg-white px-2.5 text-sm text-black shadow-[3px_3px_0_black] outline-none transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_black]',
+            'flex h-8 cursor-pointer items-center gap-2 rounded-lg border-2 border-black bg-white px-2.5 text-sm text-black shadow-[3px_3px_0_black] outline-none transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_black]',
             className
           )}
         >
@@ -145,11 +145,11 @@ export function DateTimePicker({ value, onChange, placeholder = 'Pick a date & t
         >
           <div className="w-64 p-3">
             <div className="mb-2 flex items-center justify-between">
-              <button type="button" onClick={() => changeMonth(-1)} className="rounded-md p-1 hover:bg-black/5">
+              <button type="button" onClick={() => changeMonth(-1)} className="cursor-pointer rounded-md p-1 hover:bg-black/5">
                 <ChevronLeft size={16} />
               </button>
               <span className="text-sm font-medium">{monthLabel}</span>
-              <button type="button" onClick={() => changeMonth(1)} className="rounded-md p-1 hover:bg-black/5">
+              <button type="button" onClick={() => changeMonth(1)} className="cursor-pointer rounded-md p-1 hover:bg-black/5">
                 <ChevronRight size={16} />
               </button>
             </div>
@@ -169,7 +169,7 @@ export function DateTimePicker({ value, onChange, placeholder = 'Pick a date & t
                     type="button"
                     onClick={() => selectDay(cell)}
                     className={cn(
-                      'flex h-7 w-7 items-center justify-center rounded-md text-sm',
+                      'flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-sm',
                       !cell.current && 'text-black/30',
                       cell.current && !isSelected && 'hover:bg-black/5',
                       isSelected && 'bg-black text-white font-medium'
@@ -182,10 +182,10 @@ export function DateTimePicker({ value, onChange, placeholder = 'Pick a date & t
             </div>
 
             <div className="mt-3 flex items-center justify-between border-t border-black/10 pt-2 text-sm">
-              <button type="button" onClick={clear} className="text-black/60 hover:text-black">
+              <button type="button" onClick={clear} className="cursor-pointer text-black/60 hover:text-black">
                 Clear
               </button>
-              <button type="button" onClick={goToNow} className="font-medium hover:underline">
+              <button type="button" onClick={goToNow} className="cursor-pointer font-medium hover:underline">
                 Now
               </button>
             </div>
@@ -204,7 +204,7 @@ export function DateTimePicker({ value, onChange, placeholder = 'Pick a date & t
                     type="button"
                     onClick={() => setTime(h, parsed?.minute ?? 0)}
                     className={cn(
-                      'flex w-full items-center justify-center py-1.5 text-sm hover:bg-black/5',
+                      'flex w-full cursor-pointer items-center justify-center py-1.5 text-sm hover:bg-black/5',
                       parsed?.hour === h && 'bg-black text-white font-medium hover:bg-black'
                     )}
                   >
@@ -219,7 +219,7 @@ export function DateTimePicker({ value, onChange, placeholder = 'Pick a date & t
                     type="button"
                     onClick={() => setTime(parsed?.hour ?? 0, m)}
                     className={cn(
-                      'flex w-full items-center justify-center py-1.5 text-sm hover:bg-black/5',
+                      'flex w-full cursor-pointer items-center justify-center py-1.5 text-sm hover:bg-black/5',
                       parsed?.minute === m && 'bg-black text-white font-medium hover:bg-black'
                     )}
                   >

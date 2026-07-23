@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -25,11 +28,28 @@ const devTips = [
   "Logging is cheaper than debugging production.",
 ];
 
+function pickRandom() {
+  return {
+    excuse: excuses[Math.floor(Math.random() * excuses.length)],
+    tip: devTips[Math.floor(Math.random() * devTips.length)],
+    tipNumber: Math.floor(Math.random() * 100) + 1,
+  };
+}
+
 export default function NotFound() {
-  const randomExcuse = excuses[Math.floor(Math.random() * excuses.length)];
-  const randomTipIndex = Math.floor(Math.random() * devTips.length);
-  const randomTip = devTips[randomTipIndex];
-  const randomTipNumber = Math.floor(Math.random() * 100) + 1;
+  // This route is statically prerendered at build time, so a plain
+  // Math.random() call here would only ever run once (at build time) and
+  // the same "random" pick would ship to every visitor forever. Re-roll
+  // client-side after mount instead, so it's fresh on every page load.
+  const [random, setRandom] = useState(() => ({ excuse: excuses[0], tip: devTips[0], tipNumber: 1 }));
+
+  useEffect(() => {
+    // Re-rolling client-side here is the deliberate fix for the static-prerender freeze above.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setRandom(pickRandom());
+  }, []);
+
+  const { excuse: randomExcuse, tip: randomTip, tipNumber: randomTipNumber } = random;
 
   return (
     <div className="container mx-auto px-4 py-24 min-h-[80vh] flex flex-col">
@@ -38,7 +58,7 @@ export default function NotFound() {
           <h1 className="text-9xl font-bold mb-4">404</h1>
           <h2 className="text-2xl font-semibold mb-2">Route not found</h2>
           <p className="text-muted-foreground">
-            The page you're looking for doesn't exist.
+            The page you&apos;re looking for doesn&apos;t exist.
           </p>
         </div>
 
@@ -46,7 +66,7 @@ export default function NotFound() {
           <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-2">
             Possible explanation
           </p>
-          <p className="text-foreground italic">"{randomExcuse}"</p>
+          <p className="text-foreground italic">&ldquo;{randomExcuse}&rdquo;</p>
         </div>
 
         <div className="flex gap-4 justify-center">

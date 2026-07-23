@@ -44,7 +44,7 @@ export default function LoremGenerator() {
                 type="button"
                 onClick={() => setUnit(opt.value)}
                 className={cn(
-                  'rounded-md px-2.5 py-1',
+                  'cursor-pointer rounded-md px-2.5 py-1',
                   unit === opt.value ? 'bg-black text-white' : 'text-black/60 hover:text-black'
                 )}
               >

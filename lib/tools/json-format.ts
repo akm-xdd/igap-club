@@ -9,9 +9,19 @@ export interface JsonParseResult {
   error?: JsonParseError;
 }
 
+export const MAX_JSON_INPUT_LENGTH = 2_000_000;
+
 export function parseJson(input: string): JsonParseResult {
   if (!input.trim()) {
     return { error: { message: 'Nothing to parse' } };
+  }
+
+  if (input.length > MAX_JSON_INPUT_LENGTH) {
+    return {
+      error: {
+        message: `Input is too large to format (limit ${MAX_JSON_INPUT_LENGTH.toLocaleString()} characters)`,
+      },
+    };
   }
 
   try {

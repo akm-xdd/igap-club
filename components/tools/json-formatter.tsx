@@ -83,7 +83,7 @@ export default function JsonFormatter() {
               type="button"
               onClick={() => setIndent(opt.value)}
               className={cn(
-                'rounded-md px-2 py-1',
+                'cursor-pointer rounded-md px-2 py-1',
                 indent === opt.value ? 'bg-black text-white' : 'text-black/60 hover:text-black'
               )}
             >
@@ -104,7 +104,7 @@ export default function JsonFormatter() {
         >
           {result.error ? <XCircle size={14} /> : <CheckCircle2 size={14} />}
           {result.error
-            ? `Invalid JSON${result.error.line ? ` — line ${result.error.line}, column ${result.error.column}` : ''}: ${result.error.message}`
+            ? `Invalid JSON${result.error.line ? ` - line ${result.error.line}, column ${result.error.column}` : ''}: ${result.error.message}`
             : 'Valid JSON'}
         </div>
       )}

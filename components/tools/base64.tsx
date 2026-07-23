@@ -16,7 +16,7 @@ export default function Base64Tool() {
     try {
       setOutput(encodeBase64(input));
     } catch (e) {
-      setError('Failed to encode');
+      setError(e instanceof Error ? e.message : 'Failed to encode');
     }
   };
 
@@ -25,7 +25,7 @@ export default function Base64Tool() {
     try {
       setOutput(decodeBase64(input));
     } catch (e) {
-      setError('Invalid Base64 string');
+      setError(e instanceof Error ? e.message : 'Invalid Base64 string');
     }
   };
 

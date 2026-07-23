@@ -5,7 +5,7 @@ import { CopyCodeButton } from '@/components/copy-code-button';
 
 function Code({ children, className, ...props }: ComponentPropsWithoutRef<'code'>) {
   // Fenced code blocks get a `language-xxx` className from MDX; inline `code` doesn't.
-  // Only highlight block code — sugar-high's palette is tuned for the dark <pre> background
+  // Only highlight block code - sugar-high's palette is tuned for the dark <pre> background
   // and reads as invisible against the light inline-code pill.
   const isBlock = typeof className === 'string' && className.startsWith('language-');
 

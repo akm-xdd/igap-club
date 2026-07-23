@@ -6,6 +6,9 @@ import JWTParser from '@/components/tools/jwt-parser';
 import EpochConverter from '@/components/tools/epoch-converter';
 import JsonFormatter from '@/components/tools/json-formatter';
 import LoremGenerator from '@/components/tools/lorem-generator';
+import CronParser from '@/components/tools/cron-parser';
+import TextDiff from '@/components/tools/text-diff';
+import SecretGenerator from '@/components/tools/secret-generator';
 
 const toolComponents: Record<string, React.ComponentType> = {
   'uuid-generator': UUIDGenerator,
@@ -14,6 +17,9 @@ const toolComponents: Record<string, React.ComponentType> = {
   'epoch-converter': EpochConverter,
   'json-formatter': JsonFormatter,
   'lorem-ipsum': LoremGenerator,
+  'cron-parser': CronParser,
+  'text-diff': TextDiff,
+  'secret-generator': SecretGenerator,
 };
 
 export function generateStaticParams() {

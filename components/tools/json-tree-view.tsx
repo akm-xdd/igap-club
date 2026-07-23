@@ -48,7 +48,7 @@ function JsonTreeNode({ label, value, depth, defaultExpanded = false }: JsonTree
           <button
             type="button"
             onClick={() => setExpanded((e) => !e)}
-            className="flex size-4 shrink-0 items-center justify-center text-black/50 hover:text-black"
+            className="flex size-4 shrink-0 cursor-pointer items-center justify-center text-black/50 hover:text-black"
           >
             {expanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
           </button>

@@ -76,14 +76,14 @@ function EpochToTimestamp() {
         <button
           type="button"
           onClick={() => handleUnitToggle('seconds')}
-          className={`rounded-md px-2 py-1 ${unit === 'seconds' ? 'bg-muted font-medium' : 'text-muted-foreground'}`}
+          className={`cursor-pointer rounded-md px-2 py-1 ${unit === 'seconds' ? 'bg-muted font-medium' : 'text-muted-foreground'}`}
         >
           Seconds
         </button>
         <button
           type="button"
           onClick={() => handleUnitToggle('milliseconds')}
-          className={`rounded-md px-2 py-1 ${unit === 'milliseconds' ? 'bg-muted font-medium' : 'text-muted-foreground'}`}
+          className={`cursor-pointer rounded-md px-2 py-1 ${unit === 'milliseconds' ? 'bg-muted font-medium' : 'text-muted-foreground'}`}
         >
           Milliseconds
         </button>

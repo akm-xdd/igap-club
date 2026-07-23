@@ -35,4 +35,19 @@ export const toolsRegistry: Tool[] = [
     name: 'Lorem Ipsum Generator',
     description: 'Generate placeholder text by words, sentences, or paragraphs',
   },
+  {
+    slug: 'cron-parser',
+    name: 'Cron Expression Parser',
+    description: 'Explain cron schedules in plain English and preview upcoming run times',
+  },
+  {
+    slug: 'text-diff',
+    name: 'Text Diff Checker',
+    description: 'Compare two blocks of text side-by-side with line and word-level highlights',
+  },
+  {
+    slug: 'secret-generator',
+    name: 'Secret & Password Generator',
+    description: 'Generate passwords, API keys, tokens, and passphrases with adjustable entropy',
+  },
 ];

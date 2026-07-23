@@ -42,7 +42,7 @@ export function TimezoneCombobox({
       <Popover.Trigger asChild>
         <button
           type="button"
-          className="flex h-8 w-full items-center justify-between gap-2 rounded-lg border border-black/20 bg-white px-2.5 text-sm text-black outline-none focus-visible:ring-3 focus-visible:ring-black/20"
+          className="flex h-8 w-full cursor-pointer items-center justify-between gap-2 rounded-lg border border-black/20 bg-white px-2.5 text-sm text-black outline-none focus-visible:ring-3 focus-visible:ring-black/20"
         >
           <span className={cn('truncate', !value && 'text-black/50')}>
             {value || placeholder}
@@ -79,7 +79,7 @@ export function TimezoneCombobox({
                   onChange(tz);
                   setOpen(false);
                 }}
-                className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-black hover:bg-black/5"
+                className="flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-black hover:bg-black/5"
               >
                 <Check
                   size={14}

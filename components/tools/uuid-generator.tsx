@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { generateUUID, generateBulkUUIDs } from '@/lib/tools/uuid';
+import { generateUUID, generateBulkUUIDs, MAX_BULK_UUIDS } from '@/lib/tools/uuid';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -46,9 +46,12 @@ export default function UUIDGenerator() {
           <Input
             type="number"
             value={count}
-            onChange={(e) => setCount(Number(e.target.value))}
+            onChange={(e) => {
+              const next = Number(e.target.value);
+              setCount(Number.isFinite(next) ? Math.max(1, Math.min(next, MAX_BULK_UUIDS)) : 1);
+            }}
             min={1}
-            max={1000}
+            max={MAX_BULK_UUIDS}
             className="w-24"
           />
           <Button onClick={handleBulkGenerate}>Generate {count} UUIDs</Button>

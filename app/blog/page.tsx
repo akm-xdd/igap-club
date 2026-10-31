@@ -1,5 +1,13 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { getBlogPosts } from '@/lib/mdx';
+import { pageMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Blog',
+  description: 'Battle-tested solutions and engineering writeups from production.',
+  path: '/blog',
+});
 
 function formatDate(date?: string): string | null {
   if (!date) return null;

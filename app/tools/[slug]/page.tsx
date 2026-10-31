@@ -1,5 +1,7 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { toolsRegistry } from '@/lib/tools/registry';
+import { pageMetadata } from '@/lib/seo';
 import UUIDGenerator from '@/components/tools/uuid-generator';
 import Base64Tool from '@/components/tools/base64';
 import JWTParser from '@/components/tools/jwt-parser';
@@ -26,6 +28,23 @@ export function generateStaticParams() {
   return toolsRegistry.map((tool) => ({
     slug: tool.slug,
   }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const tool = toolsRegistry.find((t) => t.slug === slug);
+
+  if (!tool) return {};
+
+  return pageMetadata({
+    title: tool.name,
+    description: tool.description,
+    path: `/tools/${tool.slug}`,
+  });
 }
 
 export default async function ToolPage({ params }: { params: Promise<{ slug: string }> }) {

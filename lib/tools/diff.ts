@@ -1,6 +1,8 @@
 interface LcsOp<T> {
   type: 'equal' | 'delete' | 'insert';
   value: T;
+  /** For `equal` ops, the matching element from `b` (may differ from `value` when `equals` is loose). */
+  valueB?: T;
 }
 
 function computeLcsDiff<T>(a: T[], b: T[], equals: (x: T, y: T) => boolean): LcsOp<T>[] {
@@ -19,7 +21,7 @@ function computeLcsDiff<T>(a: T[], b: T[], equals: (x: T, y: T) => boolean): Lcs
   let j = 0;
   while (i < n && j < m) {
     if (equals(a[i], b[j])) {
-      ops.push({ type: 'equal', value: a[i] });
+      ops.push({ type: 'equal', value: a[i], valueB: b[j] });
       i++;
       j++;
     } else if (dp[i + 1][j] >= dp[i][j + 1]) {
@@ -101,7 +103,7 @@ function groupOps(ops: LcsOp<string>[]): DiffRow[] {
       rows.push({
         type: 'equal',
         leftLine: op.value,
-        rightLine: op.value,
+        rightLine: op.valueB ?? op.value,
         leftLineNumber: leftLineNumber++,
         rightLineNumber: rightLineNumber++,
       });

@@ -1,5 +1,7 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { getBlogPost, getBlogPosts } from '@/lib/mdx';
+import { pageMetadata } from '@/lib/seo';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
@@ -10,6 +12,25 @@ export function generateStaticParams() {
   return getBlogPosts().map((post) => ({
     slug: post.slug,
   }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getBlogPost(slug);
+
+  if (!post) return {};
+
+  return pageMetadata({
+    title: post.title,
+    description: post.description,
+    path: `/blog/${post.slug}`,
+    type: 'article',
+    publishedTime: post.date,
+  });
 }
 
 function formatDate(date?: string): string | null {

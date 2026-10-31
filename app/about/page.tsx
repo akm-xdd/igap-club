@@ -1,3 +1,13 @@
+import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = pageMetadata({
+  title: 'About',
+  description:
+    'DevBench.club is a collection of free, browser-based developer tools, technical articles, and hands-on programming guides.',
+  path: '/about',
+});
+
 export default function AboutPage() {
   return (
     <div className="container mx-auto px-4 py-16">

@@ -1,5 +1,14 @@
+import type { Metadata } from 'next';
 import { toolsRegistry } from '@/lib/tools/registry';
 import { ToolsSearch } from '@/components/tools-search';
+import { pageMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Developer Tools',
+  description:
+    'Browser-based developer utilities that run entirely on your machine. Nothing is uploaded or stored.',
+  path: '/tools',
+});
 
 export default function ToolsPage() {
   return (

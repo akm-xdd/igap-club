@@ -1,3 +1,12 @@
+import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Terms of Use',
+  description: 'The terms that govern your use of DevBench.club.',
+  path: '/terms',
+});
+
 export default function TermsPage() {
   return (
     <div className="container mx-auto px-4 py-16">

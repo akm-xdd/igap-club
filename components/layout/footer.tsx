@@ -13,12 +13,6 @@ export function Footer() {
           
           <div className="flex gap-6">
             <Link
-              href="/request-feature"
-              className="text-sm font-medium hover:underline decoration-2 underline-offset-4 transition-all"
-            >
-              Request a Feature
-            </Link>
-            <Link
               href="/about"
               className="text-sm font-medium hover:underline decoration-2 underline-offset-4 transition-all"
             >

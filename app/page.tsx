@@ -1,6 +1,16 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { pageMetadata, SITE_NAME } from '@/lib/seo';
+
+export const metadata: Metadata = {
+  ...pageMetadata({
+    title: SITE_NAME,
+    path: '/',
+  }),
+  title: { absolute: SITE_NAME },
+};
 
 export default function HomePage() {
   return (

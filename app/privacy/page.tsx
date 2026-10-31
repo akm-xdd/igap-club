@@ -1,3 +1,13 @@
+import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Privacy Policy',
+  description:
+    'DevBench.club does not collect, store, or track any personal information. No cookies, no analytics, no tracking.',
+  path: '/privacy',
+});
+
 export default function PrivacyPage() {
   return (
     <div className="container mx-auto px-4 py-16">

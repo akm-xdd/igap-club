@@ -11,6 +11,7 @@ import LoremGenerator from '@/components/tools/lorem-generator';
 import CronParser from '@/components/tools/cron-parser';
 import TextDiff from '@/components/tools/text-diff';
 import SecretGenerator from '@/components/tools/secret-generator';
+import Whiteboard from '@/components/tools/whiteboard';
 
 const toolComponents: Record<string, React.ComponentType> = {
   'uuid-generator': UUIDGenerator,
@@ -22,6 +23,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'cron-parser': CronParser,
   'text-diff': TextDiff,
   'secret-generator': SecretGenerator,
+  'whiteboard': Whiteboard,
 };
 
 export function generateStaticParams() {
@@ -56,6 +58,15 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   }
 
   const ToolComponent = toolComponents[slug];
+
+  if (tool.fullscreen) {
+    return (
+      <>
+        <h1 className="sr-only">{tool.name}</h1>
+        <ToolComponent />
+      </>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-12">

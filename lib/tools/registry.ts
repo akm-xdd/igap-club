@@ -2,6 +2,8 @@ export interface Tool {
   slug: string;
   name: string;
   description: string;
+  /** The tool fills the viewport itself, so the page renders no title or description. */
+  fullscreen?: boolean;
 }
 
 export const toolsRegistry: Tool[] = [
@@ -49,5 +51,11 @@ export const toolsRegistry: Tool[] = [
     slug: 'secret-generator',
     name: 'Secret & Password Generator',
     description: 'Generate passwords, API keys, tokens, and passphrases with adjustable entropy',
+  },
+  {
+    slug: 'whiteboard',
+    name: 'Whiteboard',
+    description: 'Sketch diagrams and ideas on an infinite canvas, saved in your browser',
+    fullscreen: true,
   },
 ];
